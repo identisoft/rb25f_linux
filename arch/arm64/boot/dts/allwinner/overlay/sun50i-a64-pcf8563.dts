@@ -1,0 +1,63 @@
+/*
+ * Copyright (C) 2018 Impro Technologies http://www.impro.net/
+ *
+ */
+/* Requires the following to be added in "/boot/armbianEnv.txt"
+ * overlay_prefix=sun50i-a64
+ * overlays=i2c1
+ * user_overlays=pcf8563
+ *
+ * Place a compiled version of this file in "/boot/user_overlays"
+ *
+ * Remove and disable the fake hardware clock
+ * apt-get purge fake-hwclock
+ * update-rc.d -f fake-hwclock remove
+ *
+ * A force read via "/etc/rc.local" is required to initially set the 
+ * system clock from the rtc at boot.
+ * hwclock --hctosys -f /dev/rtc0
+ *
+ * For some reason, ntp can interfere with reading the rtc at boot, causing 
+ * the rtc to be written to prior to setting the system clock.
+ * disable auto starting of ntp "update-rc.d -f ntp remove"
+ * however you can start ntp manually in "/etc/rc.local" after setting the system clock
+ * with "service ntp start"
+ * 
+ * pcf8563 connections
+ * Pi2 pin  Sig     Pcf pin
+ *  1       +3V3    8
+ *  3       SDA     5
+ *  5       SCL     6
+ *  9       GND     4
+ */
+ 
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "allwinner,sun50i-a64";
+    /* Disable the existing onboard rtc */
+	fragment@0 {
+		target = <&rtc>;
+		__overlay__ {
+			status = "disabled";
+		};
+	};
+
+    /* Create new rtc via i2c1 */
+	fragment@1 {
+		target = <&i2c1>;
+		__overlay__ {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			pcf8563@51 {
+				compatible = "nxp,pcf8563";
+				reg = <0x51>;
+				clock-frequency = <400000>;
+				status = "okay";
+			};
+		};
+	};
+};
+
+

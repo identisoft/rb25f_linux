@@ -1,0 +1,98 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "allwinner,sun50i-a64";
+
+  fragment@0 {
+    target = <&pio>;
+    __overlay__ {
+      wiegand_input_0: wiegand_input_0 {
+        pins = "PG2";
+        function = "gpio_in";
+        bias-pull-down;
+        debounce-interval = <40>;
+      };
+
+      wiegand_input_1: wiegand_input_1 {
+        pins = "PG3";
+        function = "gpio_in";
+        bias-pull-down;
+        debounce-interval = <40>;
+      };
+
+      wiegand_input_2: wiegand_input_2 {
+        pins = "PG4";
+        function = "gpio_in";
+        bias-pull-down;
+        debounce-interval = <40>;
+      };
+  
+      wiegand_input_3: wiegand_input_3 {
+        pins = "PG5";
+        function = "gpio_in";
+        bias-pull-down;
+        debounce-interval = <40>;
+      };
+    };
+  };
+
+  fragment@1 {
+    target-path = "/";
+    __overlay__ {
+      wiegand_green_led {
+        compatible = "gpio-keys";
+        #address-cells = <1>;
+        #size-cells = <0>;
+        pinctrl-names = "default";
+        pinctrl-0 = <&wiegand_input_0>;
+        status = "ok";
+        
+        Wiegand_Green_Led {
+          label = "Wiegand Green LED";
+          linux,code = <2>;
+          gpios = <&pio 6 2 0>;
+        };
+      };
+
+      wiegand_red_led {
+        compatible = "gpio-keys";
+        pinctrl-names = "default";
+        pinctrl-0 = <&wiegand_input_1>;
+
+        Wiegand_Red_Led {
+          label = "Wiegand Red LED";
+          linux,code = <3>;
+          gpios = <&pio 6 3 0>;
+        };
+      };
+
+      wiegand_buzzer {
+        compatible = "gpio-keys";
+        pinctrl-names = "default";
+        pinctrl-0 = <&wiegand_input_2>;
+
+        Wiegand_Buzzer {
+          label = "Wiegand Buzzer";
+          linux,code = <4>;
+          gpios = <&pio 6 4 0>;
+        };
+      };
+
+      wiegand_hld {
+        compatible = "gpio-keys";
+        pinctrl-names = "default";
+        pinctrl-0 = <&wiegand_input_3>;
+
+        Wiegand_Hld {
+          label = "Wiegand Hld";
+          linux,code = <5>;
+          gpios = <&pio 6 5 0>;
+        };
+      };
+      
+    };
+  };
+
+};
+
