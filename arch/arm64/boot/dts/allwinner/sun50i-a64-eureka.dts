@@ -1348,6 +1348,12 @@
 			default-state = "off";
 		};		
 		
+		Wiegand_Tamper {
+			label = "Wiegand_Tamper";
+			gpios = <&pio 7 1 0>;
+			default-state = "off";
+		};
+		
 		unused_gpio_01 {
 			label = "unused_gpio_1";
 			gpios = <&pio 1 2 0>; /*PB2*/
